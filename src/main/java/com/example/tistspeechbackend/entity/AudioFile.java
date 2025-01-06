@@ -18,7 +18,7 @@ public class AudioFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // 唯一識別音檔
 
-    @Column(name = "user_id", nullable = true )
+    @Column(name = "user_id", nullable = true)
     private Long userId;  // 關聯的使用者ID
 
     @Column(name = "file_name", nullable = false, length = 255)
@@ -33,6 +33,9 @@ public class AudioFile {
 
     @Column(name = "uploaded_at", nullable = false, updatable = false)
     private Timestamp uploadedAt;  // 上傳時間
+
+    @Column(name = "transcription", columnDefinition = "TEXT")
+    private String transcription;  // 音檔文字轉錄結果
 
     // Getter and Setter methods
     public Long getId() {
@@ -81,5 +84,13 @@ public class AudioFile {
 
     public void setUploadedAt(Timestamp uploadedAt) {
         this.uploadedAt = uploadedAt;
+    }
+
+    public String getTranscription() {
+        return transcription;
+    }
+
+    public void setTranscription(String transcription) {
+        this.transcription = transcription;
     }
 }

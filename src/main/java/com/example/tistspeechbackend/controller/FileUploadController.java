@@ -2,12 +2,11 @@ package com.example.tistspeechbackend.controller;
 
 import com.example.tistspeechbackend.entity.AudioFile;
 import com.example.tistspeechbackend.repository.AudioFileRepository;
+import com.example.tistspeechbackend.dto.UploadResponse;  // 引入 UploadResponse
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -22,9 +21,11 @@ public class FileUploadController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("檔案不可為空");
+            // 檔案為空時回傳錯誤訊息
+            UploadResponse response = new UploadResponse("error", "檔案不可為空");
+            return ResponseEntity.badRequest().body(response);
         }
 
         try {
@@ -38,10 +39,14 @@ public class FileUploadController {
             audioFile.setUploadedAt(Timestamp.valueOf(LocalDateTime.now()));
             audioFileRepository.save(audioFile);
 
-            return ResponseEntity.ok("檔案上傳成功");
+            // 檔案成功上傳
+            UploadResponse response = new UploadResponse("success", "檔案上傳成功");
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("上傳失敗");
+            // 上傳過程中發生錯誤
+            UploadResponse response = new UploadResponse("error", "上傳失敗");
+            return ResponseEntity.status(500).body(response);
         }
     }
 }

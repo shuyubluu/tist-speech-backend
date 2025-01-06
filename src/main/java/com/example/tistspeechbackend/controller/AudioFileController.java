@@ -50,6 +50,7 @@ public class AudioFileController {
     }
 
     // 刪除音檔
+    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAudioFile(@PathVariable Long id) {
         audioFileService.deleteAudioFile(id);
