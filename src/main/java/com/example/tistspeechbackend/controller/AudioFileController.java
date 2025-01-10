@@ -56,4 +56,23 @@ public class AudioFileController {
         audioFileService.deleteAudioFile(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 更新音檔的轉文字結果
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/updateTranscription/{id}")
+    public ResponseEntity<AudioFile> updateTranscription(@PathVariable Long id, @RequestBody AudioFile updatedFile) {
+        Optional<AudioFile> existingFile = audioFileService.getAudioFileById(id);
+
+        if (existingFile.isPresent()) {
+            AudioFile file = existingFile.get();
+            file.setTranscription(updatedFile.getTranscription());  // 更新轉錄結果
+
+            // 保存更新後的音檔
+            AudioFile savedFile = audioFileService.saveAudioFile(file);
+            return ResponseEntity.ok(savedFile);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
